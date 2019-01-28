@@ -1,0 +1,15 @@
+a=input("Enter first number:")
+b=input("Enter second number:")
+a=int(a)
+b=int(b)
+numbers=[a,b]
+c=sum(numbers)
+print("Sum is:",c)
+c=str(c)
+rev=c[::-1]
+print("reverse is:",rev)
+print("subtraction:",(a-b))
+print("multiplication:",(a*b))
+print("division:",(a/b))
+print("mod:",(a%b))
+print("power:",(a**b))
