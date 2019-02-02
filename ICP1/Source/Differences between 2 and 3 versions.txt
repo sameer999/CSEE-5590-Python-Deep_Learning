@@ -1,0 +1,14 @@
+Differences between Python 2 and Python 3:
+
+1. Division Operator:
+In python 2, result will be nearest whole number.
+7/5=2
+In python 3, result will be float.
+7/5=1.4
+
+2. Print function Syntax:
+In Python 2, no need of parenthesis, where as in Python 3 parenthesis are must.
+
+3. String type:
+In Python 2, default string type is ASCII.
+In Python 3, default String type is Unicode.
