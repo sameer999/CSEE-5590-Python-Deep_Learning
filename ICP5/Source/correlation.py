@@ -1,9 +1,16 @@
 import pandas as pd
 
-train_df = pd.read_csv('titanic.csv')
+#importing the dataset
+titanic = pd.read_csv('titanic.csv')
 
-train_df['Sex'] = train_df['Sex'].map( {'female': 1, 'male': 0} )
+print(titanic['Sex'])
 
+#converting categorical data to  numeric data by using map function
+titanic['Sex'] = titanic['Sex'].map( {'female': 1, 'male': 0} )
 
-print(type(train_df['Sex'][1]))
-print(train_df['Survived'].corr(train_df['Sex']))
+print("\nafter coonverting categorical values to numeric\n",titanic['Sex'])
+
+#finding the correlation
+print("\ncorrelation for sex and survived: ", titanic['Sex'].corr(titanic['Survived']))
+
+print('\nstandard correlation(pearson method):\n ', titanic.corr())
