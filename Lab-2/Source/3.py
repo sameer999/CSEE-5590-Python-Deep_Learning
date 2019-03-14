@@ -3,13 +3,13 @@ f1=open('nlp_input.txt','r')
 text = f1.read()
 #print(text)
 
-
 from nltk.stem import WordNetLemmatizer
 import nltk
 nltk.download('wordnet')
 
 #word tokenizing
 wtokens = nltk.word_tokenize(text)
+#print(wtokens)
 
 #lemmatizing the each word token
 lemmatizer = WordNetLemmatizer()
@@ -28,16 +28,19 @@ for x in trigrams:
 import collections
 trigram_frequency = collections.Counter(trigrams)
 top_10 = trigram_frequency.most_common(10)
-print(top_10)
+#print(top_10)
 
 #extracting only trigrams by excluding the count attribute
 l=[]
 for i in top_10:
     l.append(i[0])
-print(l)
+#print(l)
 
 #sentence tokenizing
 stokens = nltk.sent_tokenize(text)
+
+'''for i in stokens:
+    print(i)'''
 
 #extracting the sentences from input file which contains the top10 most frequent trigrams
 s=[]

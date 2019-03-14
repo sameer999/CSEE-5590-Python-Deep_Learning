@@ -1,47 +1,64 @@
-from sklearn.linear_model import LinearRegression
-from sklearn import datasets
 import pandas as pd
-import numpy as np
-from sklearn.metrics import mean_squared_error, r2_score
+import math as ma
 from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import metrics
+import warnings
 
-#importing the dat set
-df= pd.read_csv('breast_cancer.csv')
-print(df)
+warnings.filterwarnings("ignore")
 
-#searching for attributes which have null values
+#loading the dataset
+df=pd.read_csv('patient.csv')
+
+#finding columns with null attributes
 print(df.isnull().sum())
-'''
-#converting the categorical data  to numeric type
-#df = pd.get_dummies(df, columns=["Precip Type","Summary","Daily Summary"])
 
-#finding the correlation for better training of the model by selecting the appropriate features
-print(df.corr())
+#loading the values of comfort column
+c=df['COMFORT']
 
-#dropping the columns since they have less correlation with target class
-df=df.drop(columns=['Summary','Precip Type','Daily Summary'],axis=1)
+#finding the mean for the attribute comfort
+m=c.mean(skipna=True)
+m=ma.ceil(m)
 
-#replacing the null values with mean
-df.select_dtypes(include=[np.number]).interpolate().dropna()
+#replacing the null values with mean of Comfort values
+df['COMFORT']=df['COMFORT'].fillna(m)
 
-#splitting into test and train data
-X_train,X_test = train_test_split(df,test_size=0.2)
+#Training set : only feature attributes
+X=df.drop('COMFORT',axis=1)
 
-y_train=X_train['Temperature (C)']
+#converting the categorical to numeric attributes
+X=pd.get_dummies(X,columns=["L-CORE","L-SURF","L-O2","L-BP","SURF-STBL","CORE-STBL","BP-STBL","DECISION"])
 
-X_train=X_train.drop(columns=['Temperature (C)'])
-y_test=X_test['Temperature (C)']
+#test set: target attribute valaues
+y=df.iloc[:, 7].values
 
-X_test=X_test.drop(columns=['Temperature (C)'])
+#Splitting the data into Training and Test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=20)
 
-#creation of regression model and training it
-reg=LinearRegression().fit(X_train,y_train)
+#Scaling the values
+from sklearn.preprocessing import StandardScaler
+scalar_X = StandardScaler()
+X_train = scalar_X.fit_transform(X_train)
+X_test = scalar_X.transform(X_test)
 
-#predicting the target
-predict=reg.predict(X_test)
+#Naive Bayes
+model=GaussianNB()
+model.fit(X_train,y_train)
+y_p1=model.predict(X_test)
+acc1=metrics.accuracy_score(y_test,y_p1)
+print("Gaussian Naive Bayes accuracy :",acc1)
 
-#evaluation of model using metrics
-mean_squared_error = mean_squared_error(y_test, predict)
-r2_score = r2_score(y_test,predict)
-print("mean squared error is :",mean_squared_error)
-print("r2 score",r2_score)'''
+#SVM
+clf=SVC(kernel='linear',C=1).fit(X_train,y_train)
+y_p2=clf.predict(X_test)
+acc2 = metrics.accuracy_score(y_test, y_p2)
+print("svm accuracy :", acc2)
+
+#KNN
+knn = KNeighborsClassifier(n_neighbors = 3)
+knn.fit(X_train, y_train)
+y_p3 = knn.predict(X_test)
+acc3 = metrics.accuracy_score(y_test, y_p3)
+print("KNN accuracy :",acc3)
